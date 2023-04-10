@@ -28,8 +28,7 @@ import Header from "../src/reusable/header";
 import Footer from "../src/reusable/footer";
 import SelectMenu from "../src/reusable/selectMenu";
 
-import axios from "axios";
-
+import addThousandSeparator from "../src/reusable/addThousandSeparator";
 const originOptions = [
   {
     category: "HIGH SECURITY",
@@ -526,7 +525,6 @@ export default function Index() {
     shipTo: "",
     totalVolume: 0,
     totalCollateral: 0,
-    reward: 0,
   };
   const [response, setResponse] = useState(initialResponse);
   const [showToast, setShowToast] = useState({
@@ -556,7 +554,13 @@ export default function Index() {
       );
 
       if (result.status === 200) {
-        //setResponse(result.data);
+        setResponse((r) => {
+          return {
+            ...r,
+            totalVolume: result.data.totalVolume,
+            totalCollateral: result.data.effectivePrices.totalSellPrice,
+          };
+        });
         setResponseGenerated(true);
       } else {
         setShowToast({
@@ -1099,12 +1103,12 @@ export default function Index() {
                         </InputAdornment>
                       ),
                     }}
-                    value={
+                    value={addThousandSeparator(
                       additionalVolume
                         ? parseFloat(additionalVolume) +
-                          parseFloat(response.totalVolume)
+                            parseFloat(response.totalVolume)
                         : response.totalVolume
-                    }
+                    )}
                     sx={{
                       ".MuiOutlinedInput-input": {
                         fontSize: "14px",
@@ -1163,12 +1167,12 @@ export default function Index() {
                         </InputAdornment>
                       ),
                     }}
-                    value={
+                    value={addThousandSeparator(
                       additionalCollateral
                         ? parseFloat(additionalCollateral) +
-                          parseFloat(response.totalCollateral)
+                            parseFloat(response.totalCollateral)
                         : response.totalCollateral
-                    }
+                    )}
                     sx={{
                       ".MuiOutlinedInput-input": {
                         fontSize: "14px",
