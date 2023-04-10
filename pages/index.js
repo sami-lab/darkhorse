@@ -540,13 +540,16 @@ export default function Index() {
     if (data.appraisal === "") {
       return;
     }
+
+    const body = data.appraisal;
     try {
       setLoading(true);
       const result = await axios.post(
         "https://janice.e-351.com/api/rest/v2/appraisal?market=2&persist=true&compactize=true&pricePercentage=1",
-        data.appraisal,
+        body,
         {
           headers: {
+            "Content-Type": "text/plain",
             "x-apikey": publicRuntimeConfig.janice_key,
           },
         }
