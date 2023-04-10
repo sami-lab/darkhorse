@@ -21,13 +21,463 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
 import LaunchIcon from "@mui/icons-material/Launch";
 import ClearIcon from "@mui/icons-material/Clear";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import Header from "../src/reusable/header";
 import Footer from "../src/reusable/footer";
+import SelectMenu from "../src/reusable/selectMenu";
+
 import axios from "axios";
 
-const originOptions = [];
-
+const originOptions = [
+  {
+    category: "HIGH SECURITY",
+    options: [
+      {
+        label: "Jita / Perimeter",
+        value: "Jita / Perimeter",
+        destinations: [
+          {
+            category: "DRONELANDS",
+            options: [
+              {
+                label: "MJ-5F9 - B E A N S T A R",
+                value: "MJ-5F9 - B E A N S T A R",
+              },
+              {
+                label: "R1O-GN - Z E N S T A R",
+                value: "R1O-GN - Z E N S T A R",
+              },
+              {
+                label: "LXQ2-T - G A T E S T A R",
+                value: "LXQ2-T - G A T E S T A R",
+              },
+              {
+                label: "Perrigen Falls Industry Park",
+                value: "Perrigen Falls Industry Park",
+              },
+              {
+                label: "Kalevala Expanse Industry Park",
+                value: "Kalevala Expanse Industry Park",
+              },
+            ],
+          },
+          {
+            category: "GEMINATE",
+            options: [
+              {
+                label: "O-VWPB - H O N K S T A R",
+                value: "O-VWPB - H O N K S T A R",
+              },
+              {
+                label: "9P4O-F - FORT Border Gate Alpha",
+                value: "9P4O-F - FORT Border Gate Alpha",
+              },
+              {
+                label: "BWF-ZZ - What Does the Fox Say",
+                value: "BWF-ZZ - What Does the Fox Say",
+              },
+              {
+                label: "Atioth - FORT PERCH K-IYNW",
+                value: "Atioth - FORT PERCH K-IYNW",
+              },
+            ],
+          },
+          {
+            category: "DEPLOYMENT",
+            options: [
+              {
+                label: "UMI-KK - War of Interesting Times",
+                value: "UMI-KK - War of Interesting Times",
+              },
+              {
+                label: "Sakht VI - Moon 7 - Genolution Biotech",
+                value: "Sakht VI - Moon 7 - Genolution Biotech",
+              },
+            ],
+          },
+          {
+            category: "FACTION WARFARE",
+            options: [
+              {
+                label: "Egghelende V - Moon 13 - University of Caille",
+                value: "Egghelende V - Moon 13 - University of Caille",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "DRONELANDS",
+    options: [
+      {
+        label: "MJ-5F9 - B E A N S T A R",
+        value: "MJ-5F9 - B E A N S T A R",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+          {
+            category: "DED LOOT",
+            options: [
+              {
+                label: "Todifrauan VII - Moon 8 - DED Assembly Plant",
+                value: "Todifrauan VII - Moon 8 - DED Assembly Plant",
+              },
+            ],
+          },
+          {
+            category: "DEPLOYMENT",
+            options: [
+              {
+                label: "UMI-KK - War of Interesting Times",
+                value: "UMI-KK - War of Interesting Times",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "R1O-GN - Z E N S T A R",
+        value: "R1O-GN - Z E N S T A R",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+          {
+            category: "DRONELANDS",
+            options: [
+              {
+                label: "MJ-5F9 - B E A N S T A R",
+                value: "MJ-5F9 - B E A N S T A R",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "LXQ-2T - G A T E S T A R",
+        value: "LXQ-2T - G A T E S T A R",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Perrigen Falls Industry Park",
+        value: "Perrigen Falls Industry Park",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Kalevala Expanse Industry Park",
+        value: "Kalevala Expanse Industry Park",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Intra Perrigen Falls Shipping",
+        value: "Intra Perrigen Falls Shipping",
+        destinations: [
+          {
+            category: "DRONELANDS",
+            options: [
+              {
+                label: "Intra Perrigen Falls Shipping",
+                value: "Intra Perrigen Falls Shipping",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "GEMINATE",
+    options: [
+      {
+        label: "O-VWPB - H O N K S T A R",
+        value: "O-VWPB - H O N K S T A R",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "9P4O-F - FORT Border Gate Alpha",
+        value: "9P4O-F - FORT Border Gate Alpha",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "BWF-ZZ - What Does the Fox Say",
+        value: "BWF-ZZ - What Does the Fox Say",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Atioth - FORT PEARCH K-IYNW",
+        value: "Atioth - FORT PEARCH K-IYNW",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "DEPLOYMENT",
+    options: [
+      {
+        label: "UMI-KK - War of Interesting Times",
+        value: "UMI-KK - War of Interesting Times",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+          {
+            category: "DRONELANDS",
+            options: [
+              {
+                label: "MJ-5F9 - B E A N S T A R",
+                value: "MJ-5F9 - B E A N S T A R",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Sakht VI - Moon 7 - Genolution Biotech",
+        value: "Sakht VI - Moon 7 - Genolution Biotech",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "FACTION WARFARE",
+    options: [
+      {
+        label: "Egghelende V - Moon 13 - University of Caille",
+        value: "Egghelende V - Moon 13 - University of Caille",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+              {
+                label: "Perimeter - Tranquility Trading Tower",
+                value: "Perimeter - Tranquility Trading Tower",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "LOW SECURITY",
+    options: [
+      {
+        label: "Konora VI - Kaalakiota Corporation Factory",
+        value: "Konora VI - Kaalakiota Corporation Factory",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+            ],
+          },
+          {
+            category: "DRONELANDS",
+            options: [
+              {
+                label: "MJ-5F9 - B E A N S T A R",
+                value: "MJ-5F9 - B E A N S T A R",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Odebeinn V - Moon 5 - Kaalakiota Corporation",
+        value: "Odebeinn V - Moon 5 - Kaalakiota Corporation",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+            ],
+          },
+          {
+            category: "DRONELANDS",
+            options: [
+              {
+                label: "MJ-5F9 - B E A N S T A R",
+                value: "MJ-5F9 - B E A N S T A R",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        label: "Most LS NPC Stations",
+        value: "Most LS NPC Stations",
+        destinations: [
+          {
+            category: "HIGH SECURITY",
+            options: [
+              {
+                label: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+                value: "Jita IV - Moon 4 - Caldari Navy Assembly Plant",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
 const marks = [
   {
     value: 0,
@@ -56,9 +506,14 @@ const marks = [
 ];
 
 export default function Index() {
+  const originMenuId = "origin-menu";
+  const [originPopup, setOriginPopup] = useState(null);
+  const destinationMenuId = "destination-menu";
+  const [destinationPopup, setDestinationPopup] = useState(null);
+
   const [data, setData] = useState({
-    origin: "",
-    destination: "",
+    origin: originOptions[0].options[0].value,
+    destination: originOptions[0].options[0].destinations[0].options[0].value,
     appraisal: "",
     additionPercent: 0,
   });
@@ -164,54 +619,96 @@ export default function Index() {
                   <TextField
                     variant='outlined'
                     label='Origin'
-                    select
                     fullWidth
                     size='small'
                     value={data.origin}
-                    onChange={(e) =>
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <ArrowDropDownIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    aria-owns={originPopup ? originMenuId : undefined}
+                    aria-haspopup={originPopup ? true : false}
+                    onClick={(e) => setOriginPopup(e.currentTarget)}
+                    sx={{
+                      "& .MuiOutlinedInput-input": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  />
+
+                  <SelectMenu
+                    options={originOptions}
+                    value={data.origin}
+                    onChange={(val) =>
                       setData((d) => {
                         return {
                           ...d,
-                          origin: e.target.value,
+                          origin: val,
+                          destination: originOptions
+                            .flatMap((x) => x.options)
+                            .find((o) => o.value === val)?.destinations[0]
+                            .options[0].value,
                         };
                       })
                     }
-                  >
-                    {originOptions.map((item, i) => (
-                      <MenuItem key={i} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    menuId={originMenuId}
+                    open={originPopup}
+                    onClose={() => setOriginPopup(null)}
+                  />
                 </Grid>
                 {/* destination */}
+
                 <Grid item sx={{ width: "100%", mt: "16px" }}>
                   <TextField
                     variant='outlined'
                     label='Destination'
-                    select
                     fullWidth
                     size='small'
-                    helperText='350 ISK / m³ + 1% of Total Collateral'
                     value={data.destination}
-                    onChange={(e) =>
+                    InputProps={{
+                      readOnly: true,
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <ArrowDropDownIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                    aria-owns={destinationPopup ? destinationMenuId : undefined}
+                    aria-haspopup={destinationPopup ? true : false}
+                    onClick={(e) => setDestinationPopup(e.currentTarget)}
+                    sx={{
+                      "& .MuiOutlinedInput-input": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  />
+
+                  <SelectMenu
+                    options={
+                      originOptions
+                        .flatMap((x) => x.options)
+                        .find((o) => o.value === data.origin)?.destinations
+                    }
+                    value={data.destination}
+                    onChange={(val) =>
                       setData((d) => {
                         return {
                           ...d,
-                          destination: e.target.value,
+                          destination: val,
                         };
                       })
                     }
-                  >
-                    {originOptions.map((item, i) => (
-                      <MenuItem key={i} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    menuId={destinationMenuId}
+                    open={destinationPopup}
+                    onClose={() => setDestinationPopup(null)}
+                  />
                 </Grid>
                 {/* appraisal */}
-                <Grid item sx={{ width: "100%", mt: "8px" }}>
+                <Grid item sx={{ width: "100%", mt: "16px" }}>
                   <TextField
                     variant='outlined'
                     multiline
