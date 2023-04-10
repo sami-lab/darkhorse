@@ -15,6 +15,7 @@ import {
   Typography,
   Snackbar,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import RequestQuoteOutlinedIcon from "@mui/icons-material/RequestQuoteOutlined";
@@ -297,10 +298,14 @@ export default function Index() {
                           padding: "4px 10px",
                         }}
                         endIcon={<RequestQuoteOutlinedIcon />}
-                        disabled={data.appraisal.length === 0}
+                        disabled={data.appraisal.length === 0 || loading}
                         onClick={onAppraiseHandler}
                       >
-                        Appraise
+                        {loading ? (
+                          <CircularProgress size='0.8rem' />
+                        ) : (
+                          "Appraise"
+                        )}
                       </Button>
                     </Grid>
                     {/* Janice  */}
