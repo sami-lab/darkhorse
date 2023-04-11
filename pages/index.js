@@ -602,6 +602,7 @@ export default function Index() {
       direction='column'
       sx={{
         background: "#090909",
+        color: "#090909",
         backgroundImage: "url(/rocket.png)",
         backgroundPosition: "top",
         backgroundSize: "contain",
@@ -643,7 +644,7 @@ export default function Index() {
                 direction='column'
                 component={Paper}
                 elevation={0}
-                sx={{ p: "16px" }}
+                sx={{ p: "16px", background: "#fff" }}
               >
                 {/* origin */}
                 <Grid item sx={{ width: "100%" }}>
@@ -806,6 +807,10 @@ export default function Index() {
                               additionPercent: parseFloat(e.target.value),
                             };
                           });
+                          setAdditionalCollateral(
+                            (parseFloat(e.target.value) / 100) *
+                              response.totalCollateral
+                          );
                         }
                       }}
                     />
@@ -926,7 +931,7 @@ export default function Index() {
                 direction='column'
                 component={Paper}
                 elevation={0}
-                sx={{ p: "16px" }}
+                sx={{ p: "16px", background: "#fff" }}
               >
                 {/* Additional Volume */}
                 <Grid item sx={{ width: "100%" }}>
@@ -968,6 +973,12 @@ export default function Index() {
                     }}
                     value={additionalCollateral}
                     onChange={(e) => {
+                      setData((d) => {
+                        return {
+                          ...d,
+                          additionPercent: 0,
+                        };
+                      });
                       if (!e.target.value) {
                         setAdditionalCollateral("");
                       }
@@ -1255,7 +1266,7 @@ export default function Index() {
                                     parseFloat(
                                       publicRuntimeConfig.pricePerVolume
                                     ) +
-                                    (data.additionPercent / 100) *
+                                    0.01 *
                                       (additionalCollateral
                                         ? parseFloat(additionalCollateral) +
                                           parseFloat(response.totalCollateral)
@@ -1284,7 +1295,7 @@ export default function Index() {
                                   parseFloat(response.totalVolume)
                                 : parseFloat(response.totalVolume)) *
                                 parseFloat(publicRuntimeConfig.pricePerVolume) +
-                                (data.additionPercent / 100) *
+                                0.01 *
                                   (additionalCollateral
                                     ? parseFloat(additionalCollateral) +
                                       parseFloat(response.totalCollateral)
