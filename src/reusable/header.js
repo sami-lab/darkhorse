@@ -334,7 +334,7 @@ export default function header() {
         }}
       >
         <Grid item sx={{ flex: 1 }}>
-          <Grid container spacing={2}>
+          <Grid container spacing={{ sm: 2, xs: 0 }}>
             <Grid item>
               <Button
                 variant='plain'
@@ -365,7 +365,7 @@ export default function header() {
           </Grid>
         </Grid>
         <Grid item>
-          <Grid container spacing={2}>
+          <Grid container spacing={{ sm: 2, xs: 0 }}>
             <Grid item>
               <Button
                 variant='plain'

@@ -28,7 +28,10 @@ import Header from "../src/reusable/header";
 import Footer from "../src/reusable/footer";
 import SelectMenu from "../src/reusable/selectMenu";
 
+import axios from "axios";
 import addThousandSeparator from "../src/reusable/addThousandSeparator";
+import fixDecimal from "../src/reusable/fixDecimal";
+
 const originOptions = [
   {
     category: "HIGH SECURITY",
@@ -505,6 +508,7 @@ const marks = [
 ];
 
 export default function Index() {
+  const janiceLink = "https://janice.e-351.com/a/qJ24vh";
   const originMenuId = "origin-menu";
   const [originPopup, setOriginPopup] = useState(null);
   const destinationMenuId = "destination-menu";
@@ -593,7 +597,18 @@ export default function Index() {
     });
   };
   return (
-    <Grid container direction='column' sx={{ background: "#090909" }}>
+    <Grid
+      container
+      direction='column'
+      sx={{
+        background: "#090909",
+        backgroundImage: "url(/rocket.png)",
+        backgroundPosition: "top",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        height: "100%",
+      }}
+    >
       <Snackbar
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         open={showToast.active}
@@ -607,8 +622,17 @@ export default function Index() {
       <Grid item sx={{ width: "100%" }}>
         <Header />
       </Grid>
-      <Grid item sx={{ width: "100%", minHeight: "150px" }} />
-
+      <Grid item sx={{ width: "100%", minHeight: "150px" }}>
+        <Grid
+          container
+          justifyContent='center'
+          sx={{
+            ".logo": { width: { sm: "auto", xs: "100%" }, height: "150px" },
+          }}
+        >
+          <img src='/logo.png' className='logo' />
+        </Grid>
+      </Grid>
       {/* form */}
       <Grid item sx={{ width: "100%" }}>
         <Container maxWidth='md'>
@@ -746,7 +770,7 @@ export default function Index() {
                       aria-label='Restricted values'
                       //valueLabelFormat={valueLabelFormat}
 
-                      getAriaValueText={data.additionPercent}
+                      getAriaValueText={(val) => val}
                       step={null}
                       min={0}
                       max={20}
@@ -779,7 +803,7 @@ export default function Index() {
                           setData((d) => {
                             return {
                               ...d,
-                              additionPercent: e.target.value,
+                              additionPercent: parseFloat(e.target.value),
                             };
                           });
                         }
@@ -818,7 +842,7 @@ export default function Index() {
                         variant='contained'
                         fullWidth
                         component='a'
-                        href=''
+                        href={janiceLink}
                         sx={{
                           fontSize: "12px",
                           fontWeight: 500,
@@ -847,6 +871,7 @@ export default function Index() {
                         disabled={data.appraisal.length === 0}
                         onClick={() => {
                           setResponse(initialResponse);
+                          setResponseGenerated(false);
                           setData((d) => {
                             return {
                               ...d,
@@ -1086,10 +1111,12 @@ export default function Index() {
                             sx={{ p: 0 }}
                             onClick={() => {
                               navigator.clipboard.writeText(
-                                additionalVolume
-                                  ? parseFloat(additionalVolume) +
-                                      parseFloat(response.totalVolume)
-                                  : response.totalVolume
+                                fixDecimal(
+                                  additionalVolume
+                                    ? parseFloat(additionalVolume) +
+                                        parseFloat(response.totalVolume)
+                                    : response.totalVolume
+                                )
                               );
                               setShowToast({
                                 active: true,
@@ -1104,10 +1131,12 @@ export default function Index() {
                       ),
                     }}
                     value={addThousandSeparator(
-                      additionalVolume
-                        ? parseFloat(additionalVolume) +
-                            parseFloat(response.totalVolume)
-                        : response.totalVolume
+                      fixDecimal(
+                        additionalVolume
+                          ? parseFloat(additionalVolume) +
+                              parseFloat(response.totalVolume)
+                          : response.totalVolume
+                      )
                     )}
                     sx={{
                       ".MuiOutlinedInput-input": {
@@ -1150,10 +1179,12 @@ export default function Index() {
                             sx={{ p: 0 }}
                             onClick={() => {
                               navigator.clipboard.writeText(
-                                additionalCollateral
-                                  ? parseFloat(additionalCollateral) +
-                                      parseFloat(response.totalCollateral)
-                                  : response.totalCollateral
+                                fixDecimal(
+                                  additionalCollateral
+                                    ? parseFloat(additionalCollateral) +
+                                        parseFloat(response.totalCollateral)
+                                    : response.totalCollateral
+                                )
                               );
                               setShowToast({
                                 active: true,
@@ -1168,10 +1199,12 @@ export default function Index() {
                       ),
                     }}
                     value={addThousandSeparator(
-                      additionalCollateral
-                        ? parseFloat(additionalCollateral) +
-                            parseFloat(response.totalCollateral)
-                        : response.totalCollateral
+                      fixDecimal(
+                        additionalCollateral
+                          ? parseFloat(additionalCollateral) +
+                              parseFloat(response.totalCollateral)
+                          : response.totalCollateral
+                      )
                     )}
                     sx={{
                       ".MuiOutlinedInput-input": {
@@ -1213,7 +1246,22 @@ export default function Index() {
                           <IconButton
                             sx={{ p: 0 }}
                             onClick={() => {
-                              navigator.clipboard.writeText(response.reward);
+                              navigator.clipboard.writeText(
+                                fixDecimal(
+                                  (additionalVolume
+                                    ? parseFloat(additionalVolume) +
+                                      parseFloat(response.totalVolume)
+                                    : parseFloat(response.totalVolume)) *
+                                    parseFloat(
+                                      publicRuntimeConfig.pricePerVolume
+                                    ) +
+                                    (data.additionPercent / 100) *
+                                      (additionalCollateral
+                                        ? parseFloat(additionalCollateral) +
+                                          parseFloat(response.totalCollateral)
+                                        : parseFloat(response.totalCollateral))
+                                )
+                              );
                               setShowToast({
                                 active: true,
                                 message: `Reward Copied`,
@@ -1226,7 +1274,24 @@ export default function Index() {
                         </InputAdornment>
                       ),
                     }}
-                    value={response.reward}
+                    value={
+                      !responseGenerated
+                        ? 0
+                        : addThousandSeparator(
+                            fixDecimal(
+                              (additionalVolume
+                                ? parseFloat(additionalVolume) +
+                                  parseFloat(response.totalVolume)
+                                : parseFloat(response.totalVolume)) *
+                                parseFloat(publicRuntimeConfig.pricePerVolume) +
+                                (data.additionPercent / 100) *
+                                  (additionalCollateral
+                                    ? parseFloat(additionalCollateral) +
+                                      parseFloat(response.totalCollateral)
+                                    : parseFloat(response.totalCollateral))
+                            )
+                          )
+                    }
                     sx={{
                       ".MuiOutlinedInput-input": {
                         fontSize: "14px",
