@@ -644,7 +644,7 @@ export default function Index() {
                 direction='column'
                 component={Paper}
                 elevation={0}
-                sx={{ p: "16px", background: "#fff" }}
+                sx={{ p: "16px", background: "#fff", color: "#000" }}
               >
                 {/* origin */}
                 <Grid item sx={{ width: "100%" }}>
@@ -931,7 +931,7 @@ export default function Index() {
                 direction='column'
                 component={Paper}
                 elevation={0}
-                sx={{ p: "16px", background: "#fff" }}
+                sx={{ p: "16px", background: "#fff", color: "#000" }}
               >
                 {/* Additional Volume */}
                 <Grid item sx={{ width: "100%" }}>
